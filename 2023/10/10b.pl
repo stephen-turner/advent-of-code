@@ -59,7 +59,6 @@ while ($s ne 'S') {
 # F--7 and L--J don't. This can be done by counting F and J as +0.5, L and 7 as -0.5.
 
 for $i (0..$maxrow) {
-  $x = 0;
   for $j (0..$maxcol) {
     if ($b[$i][$j]) {  # This point was on the loop
       $s = $a[$i][$j];
