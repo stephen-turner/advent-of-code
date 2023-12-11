@@ -1,0 +1,45 @@
+#!perl -l
+
+# 0) Slurp in the input
+
+for (<>) {
+  push @a, [/./g];
+}
+$maxrow = $#a;
+$maxcol = $#{$a[0]};
+
+# 1) Save the positions of all the galaxies
+
+for $r (0..$maxrow) {
+  for $c (0..$maxcol) {
+    if ($a[$r][$c] eq '#') { push @gal, [$r, $c] }
+  }
+}
+
+# 2) Find rows and columns with no galaxies
+
+@emptyrows = (1) x ($maxrow + 1);
+@emptycols = (1) x ($maxcol + 1);
+for (@gal) {
+  $emptyrows[$_->[0]] = 0;
+  $emptycols[$_->[1]] = 0;
+}
+
+# 3) For each pair of galaxies, find the distance between them
+
+for $i (0..$#gal-1) {
+  for $j (($i + 1) .. $#gal) {
+    $tot +=
+      abs($gal[$i][0] - $gal[$j][0]) +  # difference in rows
+      abs($gal[$i][1] - $gal[$j][1]) +  # difference in cols
+      (grep{$emptyrows[$_]}(range($gal[$i][0],$gal[$j][0]))) +  # empty rows between them
+      (grep{$emptycols[$_]}(range($gal[$i][1],$gal[$j][1])))   # empty cols between them
+  }
+}
+
+print $tot;
+
+sub range {
+  my ($a, $b) = @_;
+  return ($a < $b) ? ($a..$b) : (reverse $b..$a);
+}
